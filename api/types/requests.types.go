@@ -13,7 +13,7 @@ type LoginUserRequest struct {
 }
 type CreateBusinessRequest struct {
 	BusinessDetails BusinessType
-	AdressDetails   AddressType
+	AddressDetails  AddressType
 }
 
 // type Request struct {
