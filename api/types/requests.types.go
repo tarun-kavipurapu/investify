@@ -1,5 +1,7 @@
 package types
 
+import "github.com/jackc/pgx/v5/pgtype"
+
 type CreateUserRequest struct {
 	ProfileDetails ProfileInfo
 	UserDetails    UserType
@@ -14,6 +16,13 @@ type LoginUserRequest struct {
 type CreateBusinessRequest struct {
 	BusinessDetails BusinessType
 	AddressDetails  AddressType
+}
+
+type FilterBusinessRequest struct {
+	DomainCode string         `json:"domain_code"`
+	StateCode  string         `json:"state_code"`
+	MinAmount  pgtype.Numeric `json:"min_amount"`
+	MaxAmount  pgtype.Numeric `json:"max_amount"`
 }
 
 // type Request struct {

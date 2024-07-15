@@ -19,19 +19,21 @@ type BkAddress struct {
 }
 
 type BkBusiness struct {
-	BusinessID             int64            `json:"business_id"`
-	BusinessOwnerID        int64            `json:"business_owner_id"`
-	BusinessOwnerFirstname string           `json:"business_owner_firstname"`
-	BusinessOwnerLastname  string           `json:"business_owner_lastname"`
-	BusinessEmail          string           `json:"business_email"`
-	BusinessContact        string           `json:"business_contact"`
-	BusinessName           string           `json:"business_name"`
-	BusinessAddressID      int64            `json:"business_address_id"`
-	BusinessRatings        pgtype.Numeric   `json:"business_ratings"`
-	BusinessMinamount      pgtype.Numeric   `json:"business_minamount"`
-	CreatedAt              pgtype.Timestamp `json:"created_at"`
-	UpdatedAt              pgtype.Timestamp `json:"updated_at"`
-	DeletedAt              pgtype.Timestamp `json:"deleted_at"`
+	BusinessID               int64            `json:"business_id"`
+	BusinessOwnerID          int64            `json:"business_owner_id"`
+	BusinessDomainCode       string           `json:"business_domain_code"`
+	BusinessStateCode        string           `json:"business_state_code"`
+	BusinessOwnerFirstname   string           `json:"business_owner_firstname"`
+	BusinessOwnerLastname    string           `json:"business_owner_lastname"`
+	BusinessEmail            string           `json:"business_email"`
+	BusinessContact          string           `json:"business_contact"`
+	BusinessName             string           `json:"business_name"`
+	BusinessAddressID        int64            `json:"business_address_id"`
+	BusinessRatings          pgtype.Numeric   `json:"business_ratings"`
+	BusinessInvestmentAmount pgtype.Numeric   `json:"business_investment_amount"`
+	CreatedAt                pgtype.Timestamp `json:"created_at"`
+	UpdatedAt                pgtype.Timestamp `json:"updated_at"`
+	DeletedAt                pgtype.Timestamp `json:"deleted_at"`
 }
 
 type BkBusinessImage struct {
@@ -60,6 +62,16 @@ type BkOwner struct {
 	CreatedAt      pgtype.Timestamp `json:"created_at"`
 	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
 	DeletedAt      pgtype.Timestamp `json:"deleted_at"`
+}
+
+type BkQuickCode struct {
+	QuickCodeID int64            `json:"quick_code_id"`
+	Type        string           `json:"type"`
+	Name        string           `json:"name"`
+	Code        string           `json:"code"`
+	Description pgtype.Text      `json:"description"`
+	CreatedAt   pgtype.Timestamp `json:"created_at"`
+	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
 }
 
 type BkRole struct {

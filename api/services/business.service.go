@@ -25,6 +25,7 @@ type BusinessService interface {
 	GetImageService(ctx *gin.Context) ([]types.ImageDetails, []error)
 
 	DeleteImageService(ctx *gin.Context) error
+	FilterBusinesses(ctx *gin.Context, req types.FilterBusinessRequest) ([]db.BkBusiness, error)
 }
 
 type BusinessServiceImpl struct {
@@ -72,15 +73,17 @@ func (b *BusinessServiceImpl) CreateBusinessService(ctx *gin.Context, req types.
 		}
 		respObject.AddressInfo = address
 		business, err := tx.CreateBusiness(ctx, db.CreateBusinessParams{
-			BusinessOwnerID:        owner.OwnerID,
-			BusinessOwnerFirstname: req.BusinessDetails.BusinessOwnerFirstname,
-			BusinessOwnerLastname:  req.BusinessDetails.BusinessOwnerLastname,
-			BusinessEmail:          req.BusinessDetails.BusinessEmail,
-			BusinessName:           req.BusinessDetails.BusinessName,
-			BusinessContact:        req.BusinessDetails.BusinessContact,
-			BusinessAddressID:      address.AddressID,
-			BusinessRatings:        req.BusinessDetails.BusinessRatings,
-			BusinessMinamount:      req.BusinessDetails.BusinessMinamount,
+			BusinessOwnerID:          owner.OwnerID,
+			BusinessDomainCode:       req.BusinessDetails.BusinessDomainCode,
+			BusinessStateCode:        req.BusinessDetails.BusinessStateCode,
+			BusinessOwnerFirstname:   req.BusinessDetails.BusinessOwnerFirstname,
+			BusinessOwnerLastname:    req.BusinessDetails.BusinessOwnerLastname,
+			BusinessEmail:            req.BusinessDetails.BusinessEmail,
+			BusinessName:             req.BusinessDetails.BusinessName,
+			BusinessContact:          req.BusinessDetails.BusinessContact,
+			BusinessAddressID:        address.AddressID,
+			BusinessRatings:          req.BusinessDetails.BusinessRatings,
+			BusinessInvestmentAmount: req.BusinessDetails.BusinessInvestmentAmount,
 		})
 
 		if err != nil {
@@ -277,4 +280,14 @@ func (b *BusinessServiceImpl) DeleteImageService(ctx *gin.Context) error {
 		return err
 	}
 	return nil
+}
+
+func (b *BusinessServiceImpl) FilterBusinesses(ctx *gin.Context, req types.FilterBusinessRequest) ([]db.BkBusiness, error) {
+	arg := db.GetFilteredBusinessesParams{
+		BusinessDomainCode:         req.DomainCode,
+		BusinessStateCode:          req.StateCode,
+		BusinessInvestmentAmount:   req.MinAmount,
+		BusinessInvestmentAmount_2: req.MaxAmount,
+	}
+	return b.store.GetFilteredBusinesses(ctx, arg)
 }

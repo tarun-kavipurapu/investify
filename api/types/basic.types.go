@@ -21,13 +21,15 @@ type ProfileInfo struct {
 	ProfileName pgtype.Text `json:"profile_name" binding:"required"`
 }
 type BusinessType struct {
-	BusinessOwnerFirstname string         `json:"business_owner_firstname"binding:"required"`
-	BusinessOwnerLastname  string         `json:"business_owner_lastname" binding:"required"`
-	BusinessEmail          string         `json:"business_email" binding:"required"`
-	BusinessContact        string         `json:"business_contact" binding:"required"`
-	BusinessName           string         `json:"business_name" binding:"required"`
-	BusinessRatings        pgtype.Numeric `json:"business_ratings"`
-	BusinessMinamount      pgtype.Numeric `json:"business_minamount"`
+	BusinessDomainCode       string         `json:"business_domain_code"`
+	BusinessStateCode        string         `json:"business_state_code"`
+	BusinessOwnerFirstname   string         `json:"business_owner_firstname"binding:"required"`
+	BusinessOwnerLastname    string         `json:"business_owner_lastname" binding:"required"`
+	BusinessEmail            string         `json:"business_email" binding:"required"`
+	BusinessContact          string         `json:"business_contact" binding:"required"`
+	BusinessName             string         `json:"business_name" binding:"required"`
+	BusinessRatings          pgtype.Numeric `json:"business_ratings"`
+	BusinessInvestmentAmount pgtype.Numeric `json:"business_investment_amount"`
 }
 type ImageDetails struct {
 	ImageID  int64  `json:"image_id"`

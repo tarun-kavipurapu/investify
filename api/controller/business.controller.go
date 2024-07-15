@@ -113,3 +113,19 @@ func (b *BusinessController) DeleteImageById(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, types.GenerateResponse(nil, "Deleted sucessfully"))
 }
+func (b *BusinessController) FilterBusinesses(ctx *gin.Context) {
+	var req types.FilterBusinessRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errors.GenerateErrorResponse(errors.ErrParsingRequest, http.StatusBadRequest, "position 1"))
+		return
+	}
+
+	businesses, err := b.businessSrv.FilterBusinesses(ctx, req)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errors.GenerateErrorResponse(err, http.StatusInternalServerError, "Failed to fetch businesses"))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, types.GenerateResponse(businesses, "Businesses fetched successfully"))
+}

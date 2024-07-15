@@ -17,28 +17,32 @@ INSERT INTO
         business_owner_id,
         business_owner_firstname,
         business_owner_lastname,
+        business_domain_code,
+        business_state_code,
         business_email,
         business_contact,
         business_name,
         business_address_id,
         business_ratings,
-        business_minamount
+        business_investment_amount
     )
 VALUES
-    ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-RETURNING business_id, business_owner_id, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_minamount, created_at, updated_at, deleted_at
+    ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10,$11)
+RETURNING business_id, business_owner_id, business_domain_code, business_state_code, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_investment_amount, created_at, updated_at, deleted_at
 `
 
 type CreateBusinessParams struct {
-	BusinessOwnerID        int64          `json:"business_owner_id"`
-	BusinessOwnerFirstname string         `json:"business_owner_firstname"`
-	BusinessOwnerLastname  string         `json:"business_owner_lastname"`
-	BusinessEmail          string         `json:"business_email"`
-	BusinessContact        string         `json:"business_contact"`
-	BusinessName           string         `json:"business_name"`
-	BusinessAddressID      int64          `json:"business_address_id"`
-	BusinessRatings        pgtype.Numeric `json:"business_ratings"`
-	BusinessMinamount      pgtype.Numeric `json:"business_minamount"`
+	BusinessOwnerID          int64          `json:"business_owner_id"`
+	BusinessOwnerFirstname   string         `json:"business_owner_firstname"`
+	BusinessOwnerLastname    string         `json:"business_owner_lastname"`
+	BusinessDomainCode       string         `json:"business_domain_code"`
+	BusinessStateCode        string         `json:"business_state_code"`
+	BusinessEmail            string         `json:"business_email"`
+	BusinessContact          string         `json:"business_contact"`
+	BusinessName             string         `json:"business_name"`
+	BusinessAddressID        int64          `json:"business_address_id"`
+	BusinessRatings          pgtype.Numeric `json:"business_ratings"`
+	BusinessInvestmentAmount pgtype.Numeric `json:"business_investment_amount"`
 }
 
 func (q *Queries) CreateBusiness(ctx context.Context, arg CreateBusinessParams) (BkBusiness, error) {
@@ -46,17 +50,21 @@ func (q *Queries) CreateBusiness(ctx context.Context, arg CreateBusinessParams) 
 		arg.BusinessOwnerID,
 		arg.BusinessOwnerFirstname,
 		arg.BusinessOwnerLastname,
+		arg.BusinessDomainCode,
+		arg.BusinessStateCode,
 		arg.BusinessEmail,
 		arg.BusinessContact,
 		arg.BusinessName,
 		arg.BusinessAddressID,
 		arg.BusinessRatings,
-		arg.BusinessMinamount,
+		arg.BusinessInvestmentAmount,
 	)
 	var i BkBusiness
 	err := row.Scan(
 		&i.BusinessID,
 		&i.BusinessOwnerID,
+		&i.BusinessDomainCode,
+		&i.BusinessStateCode,
 		&i.BusinessOwnerFirstname,
 		&i.BusinessOwnerLastname,
 		&i.BusinessEmail,
@@ -64,7 +72,7 @@ func (q *Queries) CreateBusiness(ctx context.Context, arg CreateBusinessParams) 
 		&i.BusinessName,
 		&i.BusinessAddressID,
 		&i.BusinessRatings,
-		&i.BusinessMinamount,
+		&i.BusinessInvestmentAmount,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.DeletedAt,
@@ -74,7 +82,7 @@ func (q *Queries) CreateBusiness(ctx context.Context, arg CreateBusinessParams) 
 
 const getBusinessById = `-- name: GetBusinessById :one
 SELECT
-    business_id, business_owner_id, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_minamount, created_at, updated_at, deleted_at FROM bk_business where business_id = $1
+    business_id, business_owner_id, business_domain_code, business_state_code, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_investment_amount, created_at, updated_at, deleted_at FROM bk_business where business_id = $1
 `
 
 func (q *Queries) GetBusinessById(ctx context.Context, businessID int64) (BkBusiness, error) {
@@ -83,6 +91,8 @@ func (q *Queries) GetBusinessById(ctx context.Context, businessID int64) (BkBusi
 	err := row.Scan(
 		&i.BusinessID,
 		&i.BusinessOwnerID,
+		&i.BusinessDomainCode,
+		&i.BusinessStateCode,
 		&i.BusinessOwnerFirstname,
 		&i.BusinessOwnerLastname,
 		&i.BusinessEmail,
@@ -90,7 +100,7 @@ func (q *Queries) GetBusinessById(ctx context.Context, businessID int64) (BkBusi
 		&i.BusinessName,
 		&i.BusinessAddressID,
 		&i.BusinessRatings,
-		&i.BusinessMinamount,
+		&i.BusinessInvestmentAmount,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.DeletedAt,
@@ -100,7 +110,7 @@ func (q *Queries) GetBusinessById(ctx context.Context, businessID int64) (BkBusi
 
 const getBusinessByOwnerId = `-- name: GetBusinessByOwnerId :many
 SELECT
-    business_id, business_owner_id, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_minamount, created_at, updated_at, deleted_at FROM bk_business where business_owner_id = $1
+    business_id, business_owner_id, business_domain_code, business_state_code, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_investment_amount, created_at, updated_at, deleted_at FROM bk_business where business_owner_id = $1
 `
 
 func (q *Queries) GetBusinessByOwnerId(ctx context.Context, businessOwnerID int64) ([]BkBusiness, error) {
@@ -115,6 +125,8 @@ func (q *Queries) GetBusinessByOwnerId(ctx context.Context, businessOwnerID int6
 		if err := rows.Scan(
 			&i.BusinessID,
 			&i.BusinessOwnerID,
+			&i.BusinessDomainCode,
+			&i.BusinessStateCode,
 			&i.BusinessOwnerFirstname,
 			&i.BusinessOwnerLastname,
 			&i.BusinessEmail,
@@ -122,7 +134,7 @@ func (q *Queries) GetBusinessByOwnerId(ctx context.Context, businessOwnerID int6
 			&i.BusinessName,
 			&i.BusinessAddressID,
 			&i.BusinessRatings,
-			&i.BusinessMinamount,
+			&i.BusinessInvestmentAmount,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.DeletedAt,
@@ -139,7 +151,7 @@ func (q *Queries) GetBusinessByOwnerId(ctx context.Context, businessOwnerID int6
 
 const getBusinessFeed = `-- name: GetBusinessFeed :many
 SELECT
-    business_id, business_owner_id, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_minamount, created_at, updated_at, deleted_at FROM bk_business LIMIT 10
+    business_id, business_owner_id, business_domain_code, business_state_code, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_investment_amount, created_at, updated_at, deleted_at FROM bk_business LIMIT 10
 `
 
 func (q *Queries) GetBusinessFeed(ctx context.Context) ([]BkBusiness, error) {
@@ -154,6 +166,8 @@ func (q *Queries) GetBusinessFeed(ctx context.Context) ([]BkBusiness, error) {
 		if err := rows.Scan(
 			&i.BusinessID,
 			&i.BusinessOwnerID,
+			&i.BusinessDomainCode,
+			&i.BusinessStateCode,
 			&i.BusinessOwnerFirstname,
 			&i.BusinessOwnerLastname,
 			&i.BusinessEmail,
@@ -161,7 +175,65 @@ func (q *Queries) GetBusinessFeed(ctx context.Context) ([]BkBusiness, error) {
 			&i.BusinessName,
 			&i.BusinessAddressID,
 			&i.BusinessRatings,
-			&i.BusinessMinamount,
+			&i.BusinessInvestmentAmount,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getFilteredBusinesses = `-- name: GetFilteredBusinesses :many
+SELECT business_id, business_owner_id, business_domain_code, business_state_code, business_owner_firstname, business_owner_lastname, business_email, business_contact, business_name, business_address_id, business_ratings, business_investment_amount, created_at, updated_at, deleted_at
+FROM bk_business
+WHERE
+    (business_domain_code = $1 OR $1 IS NULL)
+    AND (business_state_code = $2 OR $2 IS NULL)
+    AND (business_investment_amount >= $3 OR $3 IS NULL)
+    AND (business_investment_amount <= $4 OR $4 IS NULL)
+`
+
+type GetFilteredBusinessesParams struct {
+	BusinessDomainCode         string         `json:"business_domain_code"`
+	BusinessStateCode          string         `json:"business_state_code"`
+	BusinessInvestmentAmount   pgtype.Numeric `json:"business_investment_amount"`
+	BusinessInvestmentAmount_2 pgtype.Numeric `json:"business_investment_amount_2"`
+}
+
+func (q *Queries) GetFilteredBusinesses(ctx context.Context, arg GetFilteredBusinessesParams) ([]BkBusiness, error) {
+	rows, err := q.db.Query(ctx, getFilteredBusinesses,
+		arg.BusinessDomainCode,
+		arg.BusinessStateCode,
+		arg.BusinessInvestmentAmount,
+		arg.BusinessInvestmentAmount_2,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []BkBusiness{}
+	for rows.Next() {
+		var i BkBusiness
+		if err := rows.Scan(
+			&i.BusinessID,
+			&i.BusinessOwnerID,
+			&i.BusinessDomainCode,
+			&i.BusinessStateCode,
+			&i.BusinessOwnerFirstname,
+			&i.BusinessOwnerLastname,
+			&i.BusinessEmail,
+			&i.BusinessContact,
+			&i.BusinessName,
+			&i.BusinessAddressID,
+			&i.BusinessRatings,
+			&i.BusinessInvestmentAmount,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.DeletedAt,

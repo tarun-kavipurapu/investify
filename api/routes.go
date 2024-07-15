@@ -32,8 +32,10 @@ func SetupRouter(server *Server) *gin.Engine {
 		// ownerService := services.NewOwnerService(server.store)
 		investorService := services.NewInvestorService(server.store)
 		businessService := services.NewBusinessService(server.store, server.s3)
+		quickCodesService := services.NewQuickCodesService(server.store)
 
 		// Controllers
+		quickCodesController := controller.NewQuickCodesController(quickCodesService)
 		userController := controller.NewUserController(server.store, userService, server.s3)
 		// ownerController := controller.NewOwnerController(server.store, ownerService)
 		investorController := controller.NewInvestorController(server.store, investorService)
@@ -77,8 +79,16 @@ func SetupRouter(server *Server) *gin.Engine {
 			business.POST("/uploadBusinessImage/:id", businessController.UploadImage)
 			business.GET("/getBusinessImages/:id", businessController.GetImageByBusinessId)
 			business.DELETE("/deleteImage/:id", businessController.DeleteImageById)
+			business.POST("/filter/", businessController.FilterBusinesses) // Corrected endpoint
 			//send business id with the  image to upload to that specific business
 		}
+		quick_codes := v1.Group("/quick_codes")
+		{
+			quick_codes.GET("/states", quickCodesController.GetAllStates)
+			quick_codes.GET("/domains", quickCodesController.GetAllDomains)
+
+		}
+
 		// extra := v1.Group("/extra")
 		// {
 		// 	extra.Use(middleware.JWTAuthAny())
