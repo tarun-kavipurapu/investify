@@ -117,3 +117,15 @@ func (u *UserController) DeleteImage(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, types.GenerateResponse(nil, "Sucessfully Deleted"))
 
 }
+
+func (u *UserController) GetUserProfileDetails(ctx *gin.Context) {
+	userDetails, err := u.userSrv.GetUserProfileService(ctx)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errors.GenerateErrorResponse(err, http.StatusInternalServerError, ""))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, types.GenerateResponse(userDetails, "Sucessfully fetched User Details"))
+
+}

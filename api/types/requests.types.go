@@ -10,9 +10,10 @@ type CreateUserRequest struct {
 
 type LoginUserRequest struct {
 	Appkey       string `json:"appkey"`
-	UserEmail    string `json:"user_email"`
-	UserPassword string `json:"user_password"`
+	UserEmail    string `json:"user_email" binding:"required,email"`
+	UserPassword string `json:"user_password" binding:"required"`
 }
+
 type CreateBusinessRequest struct {
 	BusinessDetails BusinessType
 	AddressDetails  AddressType

@@ -24,6 +24,7 @@ type UserService interface {
 	UploadImageService(ctx *gin.Context, file multipart.File, header *multipart.FileHeader) (string, error)
 	GetImageService(ctx *gin.Context) (string, error)
 	DeleteImageService(ctx *gin.Context) error
+	GetUserProfileService(ctx *gin.Context) (types.UserProfileResponse, error)
 }
 
 type UserServiceImpl struct {
@@ -224,4 +225,63 @@ func (u *UserServiceImpl) DeleteImageService(ctx *gin.Context) error {
 	}
 
 	return nil
+}
+
+func (u *UserServiceImpl) GetUserProfileService(ctx *gin.Context) (types.UserProfileResponse, error) {
+
+	user, err := util.CurrentUser(ctx, u.store)
+	if err != nil {
+		return types.UserProfileResponse{}, err
+	}
+
+	var profileDetails types.ProfileInfo
+
+	var addressid int64
+
+	//phoneenumber,photolink,email,Roleid,
+
+	if user.UsersRoleID == 1 { //owner
+		profile, err := u.store.GetOwnerByUserId(ctx, user.UserID)
+
+		if err != nil {
+			return types.UserProfileResponse{}, err
+		}
+		profileDetails = types.ProfileInfo{
+			ProfileName: profile.OwnerName,
+		}
+		addressid = profile.OwnerAddressID
+	} else if user.UsersRoleID == 2 { //investor
+		profile, err := u.store.GetInvestorByUserId(ctx, user.UserID)
+		if err != nil {
+			return types.UserProfileResponse{}, err
+		}
+		profileDetails = types.ProfileInfo{
+			ProfileName: profile.InvestorName,
+		}
+		addressid = profile.InvestorAddressID
+
+	}
+
+	address, err := u.store.GetAddressById(ctx, addressid)
+
+	if err != nil {
+		return types.UserProfileResponse{}, err
+	}
+	AddressInfo := types.AddressType{
+		AddressStreet:  address.AddressStreet,
+		AddressCity:    address.AddressCity,
+		AddressState:   address.AddressState,
+		AddressCountry: address.AddressCountry,
+		AddressZipcode: address.AddressZipcode,
+	}
+	profileResponse := types.UserProfileResponse{
+		UserEmail:       user.UserEmail,
+		UserPhoneNumber: user.UserPhoneNumber.String,
+		UserPhotoLink:   user.UsersPhotoLink.String,
+		UserRoleId:      int(user.UsersRoleID),
+		AddressInfo:     AddressInfo,
+		ProfileInfo:     profileDetails,
+	}
+
+	return profileResponse, nil
 }

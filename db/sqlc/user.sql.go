@@ -55,6 +55,30 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (BkUser,
 	return i, err
 }
 
+const getProfileUser = `-- name: GetProfileUser :one
+SELECT user_id,user_email,user_phone_number,users_photo_link 
+FROM  bk_users  WHERE user_id= $1
+`
+
+type GetProfileUserRow struct {
+	UserID          int64       `json:"user_id"`
+	UserEmail       string      `json:"user_email"`
+	UserPhoneNumber pgtype.Text `json:"user_phone_number"`
+	UsersPhotoLink  pgtype.Text `json:"users_photo_link"`
+}
+
+func (q *Queries) GetProfileUser(ctx context.Context, userID int64) (GetProfileUserRow, error) {
+	row := q.db.QueryRow(ctx, getProfileUser, userID)
+	var i GetProfileUserRow
+	err := row.Scan(
+		&i.UserID,
+		&i.UserEmail,
+		&i.UserPhoneNumber,
+		&i.UsersPhotoLink,
+	)
+	return i, err
+}
+
 const getUserByEmail = `-- name: GetUserByEmail :one
 SELECT
     user_id, user_email, user_phone_number, user_password, users_role_id, users_photo_link, created_at, updated_at, deleted_at FROM bk_users where user_email = $1 LIMIT 1

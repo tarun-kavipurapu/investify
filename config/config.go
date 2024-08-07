@@ -22,8 +22,10 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.SetConfigType("env")
 
 	// Load app.env
+
 	viper.SetConfigName("app")
 	viper.AddConfigPath(path)
+	log.Println(path)
 	err = viper.MergeInConfig()
 	if err != nil {
 		log.Println("Cannot read app config file:", err)

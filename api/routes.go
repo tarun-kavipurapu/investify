@@ -3,7 +3,7 @@ package api
 import (
 	"investify/api/controller"
 	"investify/api/middleware"
-	"investify/api/services"
+	"investify/api/services"	
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -56,6 +56,7 @@ func SetupRouter(server *Server) *gin.Engine {
 			users.POST("/uploadImage", middleware.JWTAuthAny(), userController.UploadImage)
 			users.GET("/getProfileImage", middleware.JWTAuthAny(), userController.GetImage)
 			users.DELETE("/deleteProfileImage", middleware.JWTAuthAny(), userController.DeleteImage)
+			users.GET("/userProfile", middleware.JWTAuthAny(), userController.GetUserProfileDetails)
 		}
 		// owner := v1.Group("/owner")
 		// {

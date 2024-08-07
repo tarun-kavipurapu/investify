@@ -24,10 +24,10 @@ type CreateUserResponse struct {
 	ProfileInfo interface{}  `json:"profile_info"`
 }
 type LoginUserResponse struct {
-	UserProfileName string `json:user_profile_name`
-	Role            int    `json: user_role_id`
-	AccessToken     string `json:"access_token`
-	RefreshToken    string `json:"refresh_token`
+	UserProfileName string `json:"user_profile_name"`
+	Role            int    `json:"user_role_id"`
+	AccessToken     string `json:"access_token"`
+	RefreshToken    string `json:"refresh_token"`
 }
 
 type CreateBusinessResponse struct {
@@ -47,4 +47,13 @@ type GetInvestorResponse struct {
 }
 type GetInvestorFeedResponse struct {
 	InvestorInfo []db.BkInvestor `json:"investor_info"`
+}
+
+type UserProfileResponse struct {
+	UserEmail       string      `json:"user_email"`
+	UserPhoneNumber string      `json:"user_phone_number"`
+	UserPhotoLink   string      `json:"user_photo_link"`
+	UserRoleId      int         `json:"user_role_id"`
+	AddressInfo     AddressType `json:"address_info"`
+	ProfileInfo     ProfileInfo `json:"profile_info"`
 }

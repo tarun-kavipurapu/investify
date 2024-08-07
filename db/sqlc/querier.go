@@ -29,6 +29,7 @@ type Querier interface {
 	GetInvestorByUserId(ctx context.Context, investorUserID int64) (BkInvestor, error)
 	GetInvestorFeed(ctx context.Context) ([]BkInvestor, error)
 	GetOwnerByUserId(ctx context.Context, ownerUserID int64) (BkOwner, error)
+	GetProfileUser(ctx context.Context, userID int64) (GetProfileUserRow, error)
 	GetQuickCodesByType(ctx context.Context, type_ string) ([]BkQuickCode, error)
 	GetUserByEmail(ctx context.Context, userEmail string) (BkUser, error)
 	GetUserById(ctx context.Context, userID int64) (BkUser, error)

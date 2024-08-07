@@ -25,4 +25,10 @@
 - Return State,City in the Feed
 - Filter State
 
+- get the user details of the profile
 - 
+
+
+## Investify 
+
+-- WHen the The bacckend encounters acess token which is expired it should just signout 

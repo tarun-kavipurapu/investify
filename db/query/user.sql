@@ -27,3 +27,7 @@ WHERE user_id = $1;
 UPDATE bk_users
 SET users_photo_link = NULL
 WHERE user_id = $1;
+
+-- name: GetProfileUser :one
+SELECT user_id,user_email,user_phone_number,users_photo_link 
+FROM  bk_users  WHERE user_id= $1;
